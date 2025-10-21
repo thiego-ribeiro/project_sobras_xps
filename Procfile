@@ -1,1 +1,0 @@
-web: gunicorn sobras_project.wsgi
