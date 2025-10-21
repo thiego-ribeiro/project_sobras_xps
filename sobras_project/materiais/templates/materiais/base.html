@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Sobras</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <header>
+        <img src="{% static 'logo-xps.png' %}" alt="logo-header">
+        <div class="menu">
+            <a href="{% url 'lista_sobras' %}">Lista de Sobras</a>
+            <a href="{% url 'cadastrar_sobra' %}">Cadastrar Sobra</a>
+        </div>
+    </header>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    <footer>
+        <p>&copy; 2025 - Comunicação Visual Sustentável</p>
+    </footer>
+</body>
+</html>

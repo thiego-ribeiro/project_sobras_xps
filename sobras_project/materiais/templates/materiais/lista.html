@@ -1,0 +1,30 @@
+{% extends 'materiais/base.html' %}
+{% block content %}
+<h2>Sobras de Materiais</h2>
+<table>
+    <tr>
+        <th>Tipo</th>
+        <th>Quantidade</th>
+        <th>Unidade</th>
+        <th>Data</th>
+        <th>Status</th>
+        <th>Ação</th>
+    </tr>
+    {% for sobra in sobras %}
+    <tr>
+        <td>{{ sobra.tipo }}</td>
+        <td>{{ sobra.quantidade }}</td>
+        <td>{{ sobra.get_unidade_display }}</td>
+        <td>{{ sobra.data_registro }}</td>
+        <td>{{ sobra.status }}</td>
+        <td>
+            {% if sobra.status == 'Disponível' %}
+                <a href="{% url 'marcar_como_doado' sobra.id %}" class="btn">Marcar como Doado</a>
+            {% else %}
+                <span>✔️ Doado</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
