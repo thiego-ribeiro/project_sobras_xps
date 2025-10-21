@@ -23,6 +23,12 @@ class SobraMaterial(models.Model):
     unidade = models.CharField(max_length=10, choices=UNIDADES_CHOICES, default='un')
     data_registro = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Disponível')
+    
+    imagem_dispositivo = models.ImageField(
+        upload_to='imagens_dispositivos/',  # pasta onde as imagens serão salvas
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return f"{self.tipo} - {self.quantidade} {self.get_unidade_display()} ({self.status})"

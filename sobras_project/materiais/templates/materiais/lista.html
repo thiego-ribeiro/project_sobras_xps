@@ -8,6 +8,7 @@
         <th>Unidade</th>
         <th>Data</th>
         <th>Status</th>
+        <th>Imagem</th> <!-- Coluna de imagem -->
         <th>Ação</th>
     </tr>
     {% for sobra in sobras %}
@@ -17,6 +18,13 @@
         <td>{{ sobra.get_unidade_display }}</td>
         <td>{{ sobra.data_registro }}</td>
         <td>{{ sobra.status }}</td>
+        <td>
+            {% if sobra.imagem_dispositivo %}
+                <img src="{{ sobra.imagem_dispositivo.url }}" alt="{{ sobra.tipo }}" width="100">
+            {% else %}
+                Sem imagem
+            {% endif %}
+        </td>
         <td>
             {% if sobra.status == 'Disponível' %}
                 <a href="{% url 'marcar_como_doado' sobra.id %}" class="btn">Marcar como Doado</a>

@@ -8,7 +8,7 @@ def lista_sobras(request):
 
 def cadastrar_sobra(request):
     if request.method == 'POST':
-        form = SobraMaterialForm(request.POST)
+        form = SobraMaterialForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('lista_sobras')
