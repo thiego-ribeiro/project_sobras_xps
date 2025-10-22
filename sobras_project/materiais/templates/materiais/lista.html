@@ -1,38 +1,120 @@
 {% extends 'materiais/base.html' %}
 {% block content %}
-<h2>Sobras de Materiais</h2>
-<table>
-    <tr>
-        <th>Tipo</th>
-        <th>Quantidade</th>
-        <th>Unidade</th>
-        <th>Data</th>
-        <th>Status</th>
-        <th>Imagem</th> <!-- Coluna de imagem -->
-        <th>Ação</th>
-    </tr>
-    {% for sobra in sobras %}
-    <tr>
-        <td>{{ sobra.tipo }}</td>
-        <td>{{ sobra.quantidade }}</td>
-        <td>{{ sobra.get_unidade_display }}</td>
-        <td>{{ sobra.data_registro }}</td>
-        <td>{{ sobra.status }}</td>
-        <td>
-            {% if sobra.imagem_dispositivo %}
-                <img src="{{ sobra.imagem_dispositivo.url }}" alt="{{ sobra.tipo }}" width="100">
-            {% else %}
-                Sem imagem
-            {% endif %}
-        </td>
-        <td>
-            {% if sobra.status == 'Disponível' %}
-                <a href="{% url 'marcar_como_doado' sobra.id %}" class="btn">Marcar como Doado</a>
-            {% else %}
-                <span>✔️ Doado</span>
-            {% endif %}
-        </td>
-    </tr>
-    {% endfor %}
+
+<h2>Lista de Sobras</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tipo</th>
+            <th>Quantidade</th>
+            <th>Unidade</th>
+            <th>Status</th>
+            <th>Imagem</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sobra in sobras %}
+        <tr id="linha-{{ sobra.id }}">
+            <td>{{ sobra.tipo }}</td>
+            <td>{{ sobra.quantidade }}</td>
+            <td>{{ sobra.get_unidade_display }}</td>
+            <td class="status-td">
+                {% if sobra.status == 'Doado' %}
+                    <span style="color:red;">Indisponível</span> | 
+                    <span style="color:green;">&#10003; Doado</span>
+                {% else %}
+                    <span style="color:green;">Disponível</span> | 
+                    <button class="btn btn-success btn-sm doar-btn" data-id="{{ sobra.id }}">Doar</button>
+                {% endif %}
+            </td>
+            <td>
+                {% with sobra.imagens.all|first as primeira %}
+                    {% if primeira %}
+                        <img src="{{ primeira.imagem.url }}" class="thumbnail" data-sobra="{{ sobra.id }}" style="width:80px;height:80px;object-fit:cover;border:1px solid #ccc;border-radius:4px;cursor:pointer;">
+                    {% elif sobra.imagem_dispositivo %}
+                        <img src="{{ sobra.imagem_dispositivo.url }}" class="thumbnail" data-sobra="{{ sobra.id }}" style="width:80px;height:80px;object-fit:cover;border:1px solid #ccc;border-radius:4px;cursor:pointer;">
+                    {% else %}
+                        Sem imagem
+                    {% endif %}
+                {% endwith %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
+<!-- Modal de imagens -->
+<div id="imageModal" class="modal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.8);">
+    <span id="closeModal" style="position:absolute;top:20px;right:35px;color:white;font-size:40px;font-weight:bold;cursor:pointer;">&times;</span>
+    <div style="margin:auto;display:flex;align-items:center;justify-content:center;height:100%;">
+        <button id="prevBtn" style="background:none;border:none;color:white;font-size:40px;cursor:pointer;">&#10094;</button>
+        <img id="modalImage" src="" style="max-width:80%;max-height:80%;border-radius:8px;">
+        <button id="nextBtn" style="background:none;border:none;color:white;font-size:40px;cursor:pointer;">&#10095;</button>
+    </div>
+</div>
+
+<script>
+    // Criar mapa de imagens
+    const sobraImagesMap = {
+        {% for sobra in sobras %}
+            {{ sobra.id }}: [
+                {% for img in sobra.imagens.all %}
+                    "{{ img.imagem.url }}"{% if not forloop.last %},{% endif %}
+                {% endfor %}
+                {% if sobra.imagem_dispositivo %}
+                    {% if sobra.imagens.all %}, {% endif %}
+                    "{{ sobra.imagem_dispositivo.url }}"
+                {% endif %}
+            ]{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+
+    let currentSobra = null;
+    let currentIndex = 0;
+
+    const modal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+
+    // Abrir modal
+    document.querySelectorAll(".thumbnail").forEach(img => {
+        img.addEventListener("click", () => {
+            currentSobra = img.dataset.sobra;
+            currentIndex = 0;
+            modalImage.src = sobraImagesMap[currentSobra][currentIndex];
+            modal.style.display = "block";
+        });
+    });
+
+    // Fechar modal
+    document.getElementById("closeModal").onclick = () => modal.style.display = "none";
+    window.onclick = (event) => { if(event.target == modal) modal.style.display = "none"; }
+
+    // Navegação
+    document.getElementById("prevBtn").onclick = () => {
+        if (!currentSobra) return;
+        currentIndex = (currentIndex - 1 + sobraImagesMap[currentSobra].length) % sobraImagesMap[currentSobra].length;
+        modalImage.src = sobraImagesMap[currentSobra][currentIndex];
+    }
+    document.getElementById("nextBtn").onclick = () => {
+        if (!currentSobra) return;
+        currentIndex = (currentIndex + 1) % sobraImagesMap[currentSobra].length;
+        modalImage.src = sobraImagesMap[currentSobra][currentIndex];
+    }
+
+    // Botão Doar
+    document.querySelectorAll(".doar-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const sobraId = btn.dataset.id;
+            fetch("{% url 'marcar_como_doado' 0 %}".replace('0', sobraId), { method: "GET", headers: {"X-Requested-With":"XMLHttpRequest"} })
+                .then(resp => {
+                    if(resp.ok){
+                        const linha = document.getElementById("linha-" + sobraId);
+                        linha.querySelector(".status-td").innerHTML = '<span style="color:red;">Indisponível</span> | <span style="color:green;">&#10003; Doado</span>';
+                    }
+                });
+        });
+    });
+</script>
+
 {% endblock %}
