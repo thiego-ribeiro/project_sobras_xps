@@ -1,0 +1,11 @@
+{% extends 'materiais/cadastrar.html' %}
+
+{% block content %}
+<div style="text-align:center; margin-top:50px;">
+    <h2>Sua solicitação foi enviada com sucesso!</h2>
+
+    <a href="{% url 'solicitar_materiais' %}" class="btn btn-primary">
+        Fazer nova solicitação
+    </a>
+</div>
+{% endblock %}

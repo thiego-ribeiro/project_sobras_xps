@@ -2,6 +2,13 @@
 {% block content %}
 
 <h2>Lista de Sobras</h2>
+<a href="{% url 'cadastrar_sobra' %}" class="btn btn-success">
+    + Cadastrar Sobra
+</a>
+
+<a href="{% url 'solicitacoes' %}" class="btn btn-primary">
+    Ver Solicitações
+</a>
 
 <table class="table table-striped">
     <thead>

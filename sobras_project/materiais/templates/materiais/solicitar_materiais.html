@@ -1,0 +1,31 @@
+{% extends 'materiais/cadastrar.html' %}
+{% block content %}
+<h2>Solicitar Materiais</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+            <div class="form-group">
+            <label>Nome:</label>
+            {{ form.nome }}
+        </div>
+
+        <div class="form-group">
+            <label>Email:</label>
+            {{ form.email }}
+        </div>
+
+        <div class="form-group">
+            <label>Telefone:</label>
+            {{ form.telefone }}
+        </div>
+
+        <div class="form-group">
+            <label>Justificativa:</label>
+            {{ form.justificativa }}
+        </div>
+
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+</form>
+{% endblock %}

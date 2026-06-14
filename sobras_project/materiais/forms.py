@@ -1,5 +1,5 @@
 from django import forms
-from .models import SobraMaterial, ImagemDispositivo
+from .models import SobraMaterial, ImagemDispositivo, Solicitacao
 
 class SobraMaterialForm(forms.ModelForm):
     class Meta:
@@ -20,3 +20,15 @@ class ImagemDispositivoForm(forms.ModelForm):
         widgets = {
             'imagem': forms.ClearableFileInput(attrs={'class': 'form-control'})
         }
+
+class SolicitacaoForm(forms.ModelForm):
+
+    class Meta:
+        model = Solicitacao
+
+        fields = [
+            'nome',
+            'email',
+            'telefone',
+            'justificativa'
+        ]

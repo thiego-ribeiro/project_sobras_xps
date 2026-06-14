@@ -1,0 +1,50 @@
+{% extends 'materiais/base.html' %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block menu %}
+{% endblock %}
+
+{% block content %}
+<div class="login">
+    <h2>Entrar no Sistema</h2>
+
+    <div style="background:#f4f4f4;padding:10px;margin-bottom:20px;border-radius:5px;">
+        <h4>Usuários de Demonstração</h4>
+
+        <p><strong>Administrador</strong></p>
+        <p>Usuário: admin@exemplo.com</p>
+        <p>Senha: 123456</p>
+
+        <hr>
+
+        <p><strong>Solicitador</strong></p>
+        <p>Usuário: solicitador@exemplo.com</p>
+        <p>Senha: 123456</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p class="mensagem">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="campo">
+            <label for="username">Usuário</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+
+        <div class="campo">
+            <label for="password">Senha</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+{% endblock %}

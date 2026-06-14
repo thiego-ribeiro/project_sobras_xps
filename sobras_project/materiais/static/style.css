@@ -9,11 +9,17 @@ header {
     padding: 10px;
     text-align: center;
     }
+
+
+.header-logo {
+    height: 60px;
+    width: auto;
+}
  
 .menu {
     margin-top: 3px;
-    color: #ff6600;
-    background-color: #ff6600;
+    color: #006eff;
+    background-color: #006eff;
     padding: 10px;
 }    
 
@@ -37,15 +43,15 @@ a {
     }
 
 .btn {
-    background-color: #ff6600;
-    color: black;
+    background-color: #006eff;
+    color: rgb(252, 252, 252);
     padding: 6px 12px;
     border: none;
     cursor: pointer;
     }
 
 .btn:hover {
-    background-color: #e65c00;
+    background-color: #0017e6;
     }
 
 table {
@@ -60,11 +66,14 @@ th, td {
     text-align: center;
     }
     
-form input, select {
+form input,
+form select,
+form textarea {
     width: 100%;
     padding: 8px;
     margin: 5px 0;
-    }
+    box-sizing: border-box;
+}
 
 footer {
     background-color: white;

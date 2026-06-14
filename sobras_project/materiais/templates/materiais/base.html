@@ -3,22 +3,21 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Sobras</title>
+    <title>{% block title %}Sistema de Sobras{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-    <header>
-        <img src="{% static 'logo-xps.png' %}" alt="logo-header">
-        <div class="menu">
-            <a href="{% url 'lista_sobras' %}">Lista de Sobras</a>
-            <a href="{% url 'cadastrar_sobra' %}">Cadastrar Sobra</a>
-        </div>
+    <header class="header">
+        <img src="{% static 'logo-xps.png' %}" alt="logo-header" class="header-logo">
     </header>
+
     <div class="container">
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
+
     <footer>
-        <p>&copy; 2025 - Comunicação Visual Sustentável</p>
+        <p>&copy;  CAIS DA PRAIA | 2026</p>
     </footer>
 </body>
 </html>
